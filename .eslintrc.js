@@ -19,7 +19,7 @@ module.exports = {
     '@typescript-eslint',
     'import',
   ],
-  ignorePatterns: ['src/generated'],
+  ignorePatterns: ['src/generated', 'src/data/loans.json'],
   rules: {
     'import/extensions': ['error', { devDependencies: true }],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
@@ -32,5 +32,10 @@ module.exports = {
     'jsx-a11y/click-events-have-key-events': ['off'],
     'jsx-a11y/interactive-supports-focus': ['off'],
     'jsx-a11y/no-static-element-interactions': ['off'],
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
   },
 };
