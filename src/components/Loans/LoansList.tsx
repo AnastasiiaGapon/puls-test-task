@@ -38,13 +38,13 @@ const LoansList: React.FC = () => {
                   FL
                   {' '}
                 </Hidden>
-                  {loan.externalId}
-                </span>
-                <Hidden smUp>
-                  <Box component="span" ml={2} mb={-0.5} className={`${styles.status} ${loan.status.replaceAll(/\s+/g, '-')}`}>
-                    {loan.status}
-                  </Box>
-                </Hidden>
+                {loan.externalId}
+              </span>
+              <Hidden smUp>
+                <Box component="span" ml={2} mb={-0.5} className={`${styles.status} ${loan.status.replaceAll(/\s+/g, '-')}`}>
+                  {loan.status}
+                </Box>
+              </Hidden>
               <div className={`${styles.subtitle} ${styles.nameSubtitle}`}>{loan.account?.company.name}</div>
               <Hidden smUp>
                 <Box className={styles.date} pt={1} color={theme.palette.text.secondary}>

@@ -59,6 +59,64 @@
       }
     },
     {
+      "id": 23,
+      "externalId": "R9ZEQ",
+      "amount": 50000,
+      "duration": 1,
+      "status": "to be disbursed",
+      "monthlyPayment": 52500,
+      "interestRate": 5,
+      "externalProductId": 1,
+      "createdAt": "2021-09-06T12:56:40.342Z",
+      "updatedAt": "2021-10-04T07:45:58.000Z",
+      "rejectedAt": null,
+      "approvedAt": "2021-10-04T07:45:54.315Z",
+      "rejectionReason": null,
+      "closedAt": null,
+      "activatedAt": null,
+      "account": {
+        "id": 132,
+        "providerId": "A679558195993313283.3",
+        "accountNumber": "4711951501",
+        "iban": "DE40••••••••••••951501",
+        "currency": "EUR",
+        "type": "Savings account",
+        "holder": "Demo Demo",
+        "holderType": "business",
+        "isCompanyPublished": true,
+        "createdAt": "2021-07-28T06:52:27.999Z",
+        "loanLimit": 3,
+        "company": {
+          "id": 44,
+          "legalForm": "GmbH",
+          "name": "Cromwell Marketing",
+          "registrationNumber": "HRB 178881 B",
+          "registrationDistrict": "Charlottenburg",
+          "registrationDate": "2021-06-01T00:00:00.000Z",
+          "riskClass": "A",
+          "loanLimit": 30,
+          "country": "Germany",
+          "street": "Gewerbehof 10",
+          "state": "Berlin",
+          "postcode": "13597",
+          "city": "Berlin",
+          "employees": [
+            {
+              "id": 8,
+              "name": "Irene Crocket",
+              "roleName": "Manager"
+            },
+            {
+              "id": 4,
+              "name": "Ashley Cromwell",
+              "roleName": "Director"
+            }
+          ],
+          "isDataComplete": true
+        }
+      }
+    },
+    {
       "id": 33,
       "externalId": "7G4PP",
       "amount": 17500,
