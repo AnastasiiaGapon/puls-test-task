@@ -36,11 +36,11 @@ function TabPanel(props: TabPanelProps) {
 }
 
 interface TabItem {
-  'Approved Loans': any[],
-  Requests: any[],
-  'Active Loans': any[],
-  'Closed Loans': any[],
-  'Rejected Loans': any[],
+  approvedLoans: any[],
+  requests: any[],
+  activeLoans: any[],
+  closedLoans: any[],
+  rejectedLoans: any[],
 }
 
 const LoansTabs: React.FC = () => {
@@ -53,15 +53,15 @@ const LoansTabs: React.FC = () => {
 
   const [value, setValue] = React.useState(0);
   const [tabItems, setTabItems] = React.useState<TabItem>({
-    'Approved Loans': loanRequests
+    approvedLoans: loanRequests
       .filter((loan: any) => loan.status === 'pending settlement' || loan.status === 'to be disbursed'),
-    Requests: loanRequests
+    requests: loanRequests
       .filter((loan: any) => loan.status === 'waiting approval'),
-    'Active Loans': loanRequests
+    activeLoans: loanRequests
       .filter((loan: any) => loan.status === 'active'),
-    'Closed Loans': loanRequests
+    closedLoans: loanRequests
       .filter((loan: any) => loan.status === 'closed'),
-    'Rejected Loans': loanRequests
+    rejectedLoans: loanRequests
       .filter((loan: any) => loan.status === 'rejected'),
   });
 
@@ -71,43 +71,40 @@ const LoansTabs: React.FC = () => {
 
   useEffect(() => {
     setTabItems({
-      'Approved Loans': loanRequests
-        .filter((loan: any) => loan.status === 'pending settlement' || loan.status === 'to be disbursed'),
-      Requests: loanRequests
-        .filter((loan: any) => loan.status === 'waiting approval'),
-      'Active Loans': loanRequests
-        .filter((loan: any) => loan.status === 'active'),
-      'Closed Loans': loanRequests
-        .filter((loan: any) => loan.status === 'closed'),
-      'Rejected Loans': loanRequests
-        .filter((loan: any) => loan.status === 'rejected'),
+      approvedLoans: loanRequests
+        .filter((loan: any) => loan.status === 'pending settlement' || loan.status === 'to be disbursed')
+        .map((loan: any) => ({ ...loan, tabLabel: 'Approved Loans' })),
+      requests: loanRequests
+        .filter((loan: any) => loan.status === 'waiting approval')
+        .map((loan: any) => ({ ...loan, tabLabel: 'Requests' })),
+      activeLoans: loanRequests
+        .filter((loan: any) => loan.status === 'active')
+        .map((loan: any) => ({ ...loan, tabLabel: 'Active Loans' })),
+      closedLoans: loanRequests
+        .filter((loan: any) => loan.status === 'closed')
+        .map((loan: any) => ({ ...loan, tabLabel: 'Closed Loans' })),
+      rejectedLoans: loanRequests
+        .filter((loan: any) => loan.status === 'rejected')
+        .map((loan: any) => ({ ...loan, tabLabel: 'Rejected Loans' })),
     });
   }, [loanRequests]);
+
+  const { approvedLoans, requests, activeLoans, closedLoans, rejectedLoans } = tabItems;
+  const filteredTabs = [approvedLoans, requests, activeLoans, closedLoans, rejectedLoans]
+    .filter(tab => tab.length > 0);
 
   return (
     <>
       <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-        <Tab label={`Approved Loans - ${tabItems['Approved Loans'].length}`}/>
-        <Tab label={`Requests - ${tabItems.Requests.length}`} />
-        <Tab label={`Active Loans - ${tabItems['Active Loans'].length}`}/>
-        <Tab label={`Closed Loans - ${tabItems['Closed Loans'].length}`}/>
-        <Tab label={`Rejected Loans - ${tabItems['Rejected Loans'].length}`} />
+        {filteredTabs.map((tab: any) => (
+          <Tab label={`${tab[0].tabLabel} - ${tab.length}`} key={tab.id}/>
+        ))}
       </Tabs>
-      <TabPanel value={value} index={0}>
-        <LoansTabsList filteredList={tabItems['Approved Loans']} />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <LoansTabsList filteredList={tabItems.Requests}/>
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <LoansTabsList filteredList={tabItems['Active Loans']} />
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        <LoansTabsList filteredList={tabItems['Closed Loans']} />
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        <LoansTabsList filteredList={tabItems['Rejected Loans']}/>
-      </TabPanel>
+      {filteredTabs.map((tab: any, i: number) => (
+        <TabPanel value={value} index={i} key={tab.id}>
+          <LoansTabsList filteredList={tab} />
+        </TabPanel>
+      ))}
     </>
   );
 };
