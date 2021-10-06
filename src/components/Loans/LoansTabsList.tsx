@@ -1,20 +1,17 @@
 import { Box, Card, Grid, Hidden, Typography, useMediaQuery } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
-import useStyles from './LoansListStyles';
+import useStyles from './LoansTabsListStyles';
 import theme from '../../theme/theme';
 
 interface Props {
-  filteredList: any[];
+  filteredList: Loan[];
 }
 
 const LoansTabsList: React.FC<Props> = (props) => {
   const { filteredList } = props;
   const mobile = useMediaQuery(theme.breakpoints.down('xs'));
   const styles = useStyles();
-
-  // eslint-disable-next-line no-console
-  console.log('render');
 
   return (
     <>
@@ -29,7 +26,7 @@ const LoansTabsList: React.FC<Props> = (props) => {
           </Grid>
         </Card>
       </Hidden>
-      {filteredList.map((loan: any) => (
+      {filteredList.map((loan: Loan) => (
         <Card className={styles.loanCard} key={loan.id}>
           <Grid container alignItems={mobile ? 'flex-start' : 'center'}>
             <Grid item xs={7} sm={2}>

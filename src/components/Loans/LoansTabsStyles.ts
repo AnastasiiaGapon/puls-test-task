@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 export default makeStyles((theme: Theme) => ({
   loanCard: {
     marginBottom: theme.spacing(4),
-    padding: theme.spacing(4, 6),
+    padding: theme.spacing(4, 4),
     maxWidth: 800,
     borderRadius: theme.shape.borderRadius,
     boxShadow: '0 5px 25px rgba(227, 230, 236, 0.6)',
