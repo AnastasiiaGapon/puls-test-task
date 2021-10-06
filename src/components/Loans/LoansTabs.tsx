@@ -16,6 +16,12 @@ interface TabItem {
 const LoansTabs: React.FC = () => {
   const { loanRequests }: any = data;
 
+  if (!loanRequests.length) {
+    return (
+      <p>No data found :(</p>
+    );
+  }
+
   const [value, setValue] = React.useState(0);
   const [tabItems, setTabItems] = React.useState<TabItem>({
     approvedLoans: loanRequests
