@@ -1,5 +1,5 @@
 import { Typography, Box, tabsClasses, Tabs, Tab } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import LoansTabsList from './LoansTabsList';
 import TabPanel from './TabPanel';
 // eslint-disable-next-line import/extensions
@@ -13,51 +13,39 @@ interface TabItem {
   rejectedLoans: Loan[],
 }
 
+function listChanger(list: Loan[], filterBy: string[], tabName: string) {
+  return list
+    .filter((listItem: Loan) => filterBy.includes(listItem.status))
+    .map((listItem: Loan) => ({ ...listItem, tabLabel: tabName }));
+}
+
 const LoansTabs: React.FC = () => {
   const { loanRequests }: any = data;
 
-  if (!loanRequests.length) {
-    return (
-      <p>No data found :(</p>
-    );
-  }
-
   const [value, setValue] = React.useState(0);
-  const [tabItems, setTabItems] = React.useState<TabItem>({
-    approvedLoans: loanRequests
-      .filter((loan: Loan) => loan.status === 'pending settlement' || loan.status === 'to be disbursed'),
-    requests: loanRequests
-      .filter((loan: Loan) => loan.status === 'waiting approval'),
-    activeLoans: loanRequests
-      .filter((loan: Loan) => loan.status === 'active'),
-    closedLoans: loanRequests
-      .filter((loan: Loan) => loan.status === 'closed'),
-    rejectedLoans: loanRequests
-      .filter((loan: Loan) => loan.status === 'rejected'),
+
+  const [tabItems] = React.useState<TabItem>({
+    approvedLoans: listChanger(loanRequests, ['pending settlement', 'to be disbursed'], 'Approved Loans'),
+    requests: listChanger(loanRequests, ['waiting approval'], 'Requests'),
+    activeLoans: listChanger(loanRequests, ['active'], 'Active Loans'),
+    closedLoans: listChanger(loanRequests, ['closed'], 'Closed Loans'),
+    rejectedLoans: listChanger(loanRequests, ['rejected'], 'Rejected Loans'),
   });
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
-  useEffect(() => {
-    setTabItems(latestState => ({
-      approvedLoans: latestState.approvedLoans
-        .map((loan: Loan) => ({ ...loan, tabLabel: 'Approved Loans' })),
-      requests: latestState.requests
-        .map((loan: Loan) => ({ ...loan, tabLabel: 'Requests' })),
-      activeLoans: latestState.activeLoans
-        .map((loan: Loan) => ({ ...loan, tabLabel: 'Active Loans' })),
-      closedLoans: latestState.closedLoans
-        .map((loan: Loan) => ({ ...loan, tabLabel: 'Closed Loans' })),
-      rejectedLoans: latestState.rejectedLoans
-        .map((loan: Loan) => ({ ...loan, tabLabel: 'Rejected Loans' })),
-    }));
-  }, []);
 
   const { approvedLoans, requests, activeLoans, closedLoans, rejectedLoans } = tabItems;
   const filteredTabs: Loan[][] = [approvedLoans, requests, activeLoans, closedLoans, rejectedLoans]
     .filter(tab => tab.length > 0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+  
+  if (!loanRequests.length) {
+    return (
+      <p>No data found...</p>
+    );
+  }
 
   return (
     <>
