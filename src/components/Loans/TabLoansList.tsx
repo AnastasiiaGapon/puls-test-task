@@ -1,23 +1,21 @@
 import { Box, Card, Grid, Hidden, Typography, useMediaQuery } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
-// eslint-disable-next-line import/extensions
-import data from '../../data/loans.json';
-import useStyles from './LoansListStyles';
+import useStyles from './TabLoansListStyles';
 import theme from '../../theme/theme';
+import { Loan } from '../../types/Loan';
 
+interface Props {
+  tabLoansList: Loan[];
+}
 
-const LoansList: React.FC = () => {
-  const { loanRequests }: any = data;
+const LoansTabsList: React.FC<Props> = (props) => {
+  const { tabLoansList } = props;
   const mobile = useMediaQuery(theme.breakpoints.down('xs'));
   const styles = useStyles();
 
-  // eslint-disable-next-line no-console
-  console.log(loanRequests);
-
   return (
     <>
-      <Typography variant="h2" sx={{ marginBottom: 8 }}>Financing</Typography>
       <Hidden smDown>
         <Card className={styles.loansListHeader} elevation={0}>
           <Grid container>
@@ -29,7 +27,7 @@ const LoansList: React.FC = () => {
           </Grid>
         </Card>
       </Hidden>
-      {loanRequests.map((loan: any) => (
+      {tabLoansList.map((loan: Loan) => (
         <Card className={styles.loanCard} key={loan.id}>
           <Grid container alignItems={mobile ? 'flex-start' : 'center'}>
             <Grid item xs={7} sm={2}>
@@ -104,4 +102,4 @@ const LoansList: React.FC = () => {
   );
 };
 
-export default LoansList;
+export default LoansTabsList;
