@@ -1,9 +1,10 @@
 import { Typography, Box, tabsClasses, Tabs, Tab } from '@mui/material';
 import React from 'react';
-import LoansTabsList from './LoansTabsList';
+import LoansTabsList from './TabLoansList';
 import TabPanel from './TabPanel';
 // eslint-disable-next-line import/extensions
 import data from '../../data/loans.json';
+import { Loan } from '../../types/Loan';
 
 interface TabItem {
   approvedLoans: Loan[],
@@ -13,35 +14,73 @@ interface TabItem {
   rejectedLoans: Loan[],
 }
 
-function listChanger(list: Loan[], filterBy: string[], tabName: string) {
-  return list
-    .filter((listItem: Loan) => filterBy.includes(listItem.status))
-    .map((listItem: Loan) => ({ ...listItem, tabLabel: tabName }));
-}
-
 const LoansTabs: React.FC = () => {
   const { loanRequests }: any = data;
 
   const [value, setValue] = React.useState(0);
 
-  const [tabItems] = React.useState<TabItem>({
-    approvedLoans: listChanger(loanRequests, ['pending settlement', 'to be disbursed'], 'Approved Loans'),
-    requests: listChanger(loanRequests, ['waiting approval'], 'Requests'),
-    activeLoans: listChanger(loanRequests, ['active'], 'Active Loans'),
-    closedLoans: listChanger(loanRequests, ['closed'], 'Closed Loans'),
-    rejectedLoans: listChanger(loanRequests, ['rejected'], 'Rejected Loans'),
+  loanRequests.reduce((acc: TabItem, loanRequest: Loan) => {
+    switch (loanRequest.status) {
+      case 'pending settlement':
+      case 'to be disbursed':
+        acc.approvedLoans.push(loanRequest);
+        break;
+      case 'waiting approval':
+        acc.requests.push(loanRequest);
+        break;
+      case 'active':
+        acc.activeLoans.push(loanRequest);
+        break;
+      case 'closed':
+        acc.closedLoans.push(loanRequest);
+        break;
+      case 'rejected':
+        acc.rejectedLoans.push(loanRequest);
+        break;
+    }
+    return acc;
+  }, {
+    approvedLoans: [],
+    requests: [],
+    activeLoans: [],
+    closedLoans: [],
+    rejectedLoans: [],
+  } as TabItem);
+  
+  const tabs: { label: string, loans: Loan[] }[] = [
+    { label: 'Approved Loans', loans: [] },
+    { label: 'Requests', loans: [] },
+    { label: 'Active Loans', loans: [] },
+    { label: 'Closed Loans', loans: [] },
+    { label: 'Rejected Loans', loans: [] },
+  ];
+
+  loanRequests.forEach((loan: Loan) => {
+    switch (loan.status) {
+      case 'pending settlement':
+      case 'to be disbursed':
+        tabs[0].loans.push(loan);
+        break;
+      case 'waiting approval':
+        tabs[1].loans.push(loan);
+        break;
+      case 'active':
+        tabs[2].loans.push(loan);
+        break;
+      case 'closed':
+        tabs[3].loans.push(loan);
+        break;
+      case 'rejected':
+        tabs[4].loans.push(loan);
+        break;
+    }
   });
-
-
-  const { approvedLoans, requests, activeLoans, closedLoans, rejectedLoans } = tabItems;
-  const filteredTabs: Loan[][] = [approvedLoans, requests, activeLoans, closedLoans, rejectedLoans]
-    .filter(tab => tab.length > 0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   
-  if (!loanRequests.length) {
+  if (!loanRequests.length || loanRequests.length === 0) {
     return (
       <p>No data found...</p>
     );
@@ -58,13 +97,14 @@ const LoansTabs: React.FC = () => {
             },
           }}
         >
-          {filteredTabs.map((tab: Loan[]) => (
-            <Tab label={`${tab[0].tabLabel} - ${tab.length}`} key={tab[0].id} />
-          ))}
+          {tabs
+            .filter(tab => tab.loans.length > 0)
+            .map(tab => <Tab label={`${tab.label} - ${tab.loans.length}`} key={tab.label} />)
+          }
         </Tabs>
-        {filteredTabs.map((tab: Loan[], i: number) => (
-          <TabPanel value={value} index={i} key={tab[0].id}>
-            <LoansTabsList filteredList={tab} />
+        {tabs.map((tab, i) => (
+          <TabPanel value={value} index={i} key={tab.label}>
+            <LoansTabsList tabLoansList={tab.loans} />
           </TabPanel>
         ))}
       </Box>
